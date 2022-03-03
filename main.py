@@ -1,9 +1,12 @@
 from flask import Flask
+
 from data import db_session
+from data.jobs import Jobs
 from data.users import User
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+
 
 # Добавляем капитана
 def main():
@@ -56,6 +59,15 @@ def main():
     user.email = "shkaf1533@mars.org"
     user.hashed_password = "shelf"
     session.add(user)
+    session.commit()
+
+    jobs = Jobs()
+    jobs.job = "deployment of residential modules 1 and 2"
+    jobs.work_size = 15
+    jobs.collaborators = '2, 3'
+    jobs.is_finished = False
+    jobs.team_leader = 1
+    session.add(jobs)
     session.commit()
 
 
