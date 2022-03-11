@@ -5,9 +5,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from .db_session import SqlAlchemyBase
 
-
-# ##### Это надо отправить -- начало{
-# Модель Марсиане
 class User(SqlAlchemyBase):
     __tablename__ = 'users'
 
@@ -24,7 +21,6 @@ class User(SqlAlchemyBase):
 
     jobs = orm.relation("Jobs", back_populates='user')
 
-# ##### Это надо отправить -- конец}
     def __repr__(self):
         return f'<Colonist> {self.id} {self.surname} {self.name}'
 

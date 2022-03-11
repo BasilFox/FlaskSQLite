@@ -4,8 +4,6 @@ from sqlalchemy import orm
 
 from .db_session import SqlAlchemyBase
 
-# ##### Это надо отправить -- начало{
-# Модель Работы
 class Jobs(SqlAlchemyBase):
     __tablename__ = 'jobs'
 
@@ -18,7 +16,5 @@ class Jobs(SqlAlchemyBase):
     is_finished = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
     team_leader = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
     user = orm.relation('User')
-
-    # ##### Это надо отправить -- конец}
-    def __repr__(self):
-        return f'<Job> {self.job}'
+    #def __repr__(self):
+        #return f'<Job> {self.job}'

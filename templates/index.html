@@ -2,7 +2,7 @@
 
 {% block content %}
 <meta charset="UTF-8">
-<h2 align="center">Works log</h2>
+<h2 align="center">Список работ</h2>
 {% for job in jobs %}
 <h3>Action # {{ job.id }}</h3>
 <div class="table_container">
@@ -16,7 +16,7 @@
         </tr>
         <tr class="my_row">
             <td class="ordinary" bgcolor="#eeeeff">{{ job.job.capitalize() }}</td>
-            <td class="ordinary" bgcolor="#eeeeff">{{ names[job.team_leader][0] }} {{ names[job.team_leader][1] }}</td>
+            <td class="ordinary" bgcolor="#eeeeff">{{ names[job.team_leader] }}</td>
             <td class="ordinary" bgcolor="#eeeeff" align="center">{{ job.work_size }} hours</td>
             <td class="ordinary" bgcolor="#eeeeff" align="center">{{ job.collaborators }}</td>
             {% if job.is_finished %}

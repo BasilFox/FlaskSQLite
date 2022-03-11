@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 
 from data import db_session
 from data.jobs import Jobs
@@ -8,68 +8,19 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 
-# Добавляем капитана
-def main():
+@app.route('/')
+@app.route('/index')
+def index():
     db_session.global_init("db/mars_explorer.sqlite")
     session = db_session.create_session()
-
-    user = User()
-    user.surname = "Scott"
-    user.name = "Ridley"
-    user.age = 21
-    user.position = "captain"
-    user.speciality = "research engineer"
-    user.address = "module_1"
-    user.email = "scott_chief@mars.org"
-    user.hashed_password = "cap"
-    session.add(user)
-    session.commit()
-
-    user = User()
-    user.surname = "Victor"
-    user.name = "Shrek"
-    user.age = 53
-    user.position = "captain assistant"
-    user.speciality = "biologist"
-    user.address = "module_2"
-    user.email = "Shrek.bio@mars.org"
-    user.hashed_password = "biolog"
-    session.add(user)
-    session.commit()
-
-    user = User()
-    user.surname = "Leopold"
-    user.name = "Kishinevsky"
-    user.age = 129
-    user.position = "main pilot"
-    user.speciality = "pilot"
-    user.address = "module_3"
-    user.email = "leopold.mold@mars.org"
-    user.hashed_password = "pilotash"
-    session.add(user)
-    session.commit()
-
-    user = User()
-    user.surname = "Vladimir"
-    user.name = "Skafovsky"
-    user.age = 498
-    user.position = "build manager"
-    user.speciality = "builder"
-    user.address = "module_4"
-    user.email = "shkaf1533@mars.org"
-    user.hashed_password = "shelf"
-    session.add(user)
-    session.commit()
-
-    jobs = Jobs()
-    jobs.job = "deployment of residential modules 1 and 2"
-    jobs.work_size = 15
-    jobs.collaborators = '2, 3'
-    jobs.is_finished = False
-    jobs.team_leader = 1
-    session.add(jobs)
-    session.commit()
+    raboty = session.query(Jobs).all()
+    ekipash = {}
+    for job in session.query(Jobs).all():
+        for user in session.query(User).filter(User.id == job.team_leader):
+            leader = f'{user.name} {user.surname}'
+            ekipash[job.team_leader] = leader
+    return render_template('index.html', jobs=raboty, names=ekipash)
 
 
 if __name__ == '__main__':
-    main()
+    app.run(port=8080, host='127.0.0.1')
