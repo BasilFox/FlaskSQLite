@@ -1,16 +1,28 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, make_response
+from flask import jsonify
 from flask_login import LoginManager, login_user
+from flask_restful import Api
 
+from data import api_part2
 from data import db_session
+from data import jobs_api
 from data.jobs import Jobs
 from data.users import User
 from forms.user import RegisterForm, LoginForm
-
+from data import jobs_resource
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 db_session.global_init("db/mars_explorer.sqlite")
+app.register_blueprint(jobs_api.blueprint)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+api = Api(app)
+api.add_resource(api_part2.UserListResource, '/api/v2/users')
+api.add_resource(api_part2.UserResource, '/api/v2/users/<int:user_id>')
+api.add_resource(jobs_resource.JobListResource, '/api/v2/jobs')
+api.add_resource(jobs_resource.JobResource, '/api/v2/jobs/<int:job_id>')
 
 
 @login_manager.user_loader
@@ -76,6 +88,11 @@ def login():
                                message="Неправильный логин или пароль",
                                form=form)
     return render_template('login.html', title='Авторизация', form=form)
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Type error'}), 404)
 
 
 if __name__ == '__main__':
