@@ -3,13 +3,12 @@ from flask import jsonify
 from flask_login import LoginManager, login_user
 from flask_restful import Api
 
-from data import api_part2
 from data import db_session
-from data import jobs_api
+from data import jobs_api, jobs_resource, api_part2
 from data.jobs import Jobs
 from data.users import User
 from forms.user import RegisterForm, LoginForm
-from data import jobs_resource
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 db_session.global_init("db/mars_explorer.sqlite")
@@ -93,7 +92,9 @@ def login():
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Type error'}), 404)
-
+@app.errorhandler(500)
+def not_found(error):
+    return make_response(jsonify({'error': 'Id already exists'}), 500)
 
 if __name__ == '__main__':
     app.run(port=8080, host='127.0.0.1')
